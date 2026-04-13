@@ -1,4 +1,4 @@
-#include <iostream>
+п»ї#include <iostream>
 #include <string>
 #include "textScan.h"
 
@@ -7,42 +7,45 @@ void testAllAlgorithms(std::string_view text, std::string_view pattern, size_t T
     bool testKMP = true,
     bool testBMH = true,
     bool testBM = true);
+std::string generateRandomText(size_t length, const std::string& alphabet = "ACGT");
 
 int main() {
     setlocale(LC_ALL, "russian");
-    // Малые тесты (много итераций)
+    // РњР°Р»С‹Рµ С‚РµСЃС‚С‹ (РјРЅРѕРіРѕ РёС‚РµСЂР°С†РёР№)
     const size_t SMALL_ITER = 10000;
-    // Средние тесты
+    // РЎСЂРµРґРЅРёРµ С‚РµСЃС‚С‹
     const size_t MEDIUM_ITER = 1000;
-    // Большие тесты (мало итераций)
+    // Р‘РѕР»СЊС€РёРµ С‚РµСЃС‚С‹ (РјР°Р»Рѕ РёС‚РµСЂР°С†РёР№)
     const size_t LARGE_ITER = 10;
 
-    // Тест 1: Короткий текст, паттерн в начале
+    // РўРµСЃС‚ 1: РљРѕСЂРѕС‚РєРёР№ С‚РµРєСЃС‚, РїР°С‚С‚РµСЂРЅ РІ РЅР°С‡Р°Р»Рµ
     testAllAlgorithms("Hello World!", "Hello", SMALL_ITER);
 
-    // Тест 2: Паттерн в середине
+    // РўРµСЃС‚ 2: РџР°С‚С‚РµСЂРЅ РІ СЃРµСЂРµРґРёРЅРµ
     testAllAlgorithms("Hello World!", "World", SMALL_ITER);
 
-    // Тест 3: Паттерн не найден
+    // РўРµСЃС‚ 3: РџР°С‚С‚РµСЂРЅ РЅРµ РЅР°Р№РґРµРЅ
     testAllAlgorithms("Hello World!", "xyz", SMALL_ITER);
 
-    // Тест 4: Пустой паттерн
+    // РўРµСЃС‚ 4: РџСѓСЃС‚РѕР№ РїР°С‚С‚РµСЂРЅ
     testAllAlgorithms("Hello World!", "", SMALL_ITER);
 
-    // Тест 5: Паттерн длиннее текста
+    // РўРµСЃС‚ 5: РџР°С‚С‚РµСЂРЅ РґР»РёРЅРЅРµРµ С‚РµРєСЃС‚Р°
     testAllAlgorithms("Hi", "Hello", SMALL_ITER);
 
-    // Тест 6: Повторяющиеся символы (худший случай для naive)
+    // РўРµСЃС‚ 6: РџРѕРІС‚РѕСЂСЏСЋС‰РёРµСЃСЏ СЃРёРјРІРѕР»С‹ (С…СѓРґС€РёР№ СЃР»СѓС‡Р°Р№ РґР»СЏ naive)
     testAllAlgorithms("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "aaaaab", MEDIUM_ITER);
 
-    // Тест 7: Большой текст (например, сгенерируй или возьми реальный)
-    std::string longText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
-        "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
-        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.";
-    testAllAlgorithms(longText, "consectetur", LARGE_ITER);
+    // РўРµСЃС‚ 7: Р‘РѕР»СЊС€РѕР№ С‚РµРєСЃС‚
+    std::string alphabet = " QWERTYUIOP{}|ASDFGHJKL:\"ZXCVBNM<>?!@#$%^&*()_+1234567890-=qwertyuiop[]asdfghjkl;'\\zxcvbnm,./\n\t";
+    size_t len = 500000;
+    std::string longText = generateRandomText(len, alphabet);
+    size_t pattern_len = 100;
+    std::string pattern = longText.substr(len - pattern_len + 1, pattern_len);
+    testAllAlgorithms(longText, pattern, LARGE_ITER);
 
-    // Тест 8: Русский текст (проверка UTF-8)
-    testAllAlgorithms("Привет мир!", "мир", SMALL_ITER);
+    // РўРµСЃС‚ 8: Р СѓСЃСЃРєРёР№ С‚РµРєСЃС‚ (РїСЂРѕРІРµСЂРєР° UTF-8)
+    testAllAlgorithms("РџСЂРёРІРµС‚ РјРёСЂ!", "РјРёСЂ", SMALL_ITER);
 
     return 0;
 }

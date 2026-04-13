@@ -1,4 +1,4 @@
-#include <iostream>
+п»ї#include <iostream>
 #include <string_view>
 #include <vector>
 #include <array>
@@ -7,7 +7,7 @@
 namespace textScan {
 
     namespace {
-        // Построение префикс-функции для шаблона (для КМП)
+        // РџРѕСЃС‚СЂРѕРµРЅРёРµ РїСЂРµС„РёРєСЃ-С„СѓРЅРєС†РёРё РґР»СЏ С€Р°Р±Р»РѕРЅР° (РґР»СЏ РљРњРџ)
         std::vector<size_t> buildPrefixFunction(std::string_view pattern) {
             size_t m = pattern.length();
             std::vector<size_t> pi(m, 0); 
@@ -15,12 +15,12 @@ namespace textScan {
             for (size_t i = 1; i != m; ++i) {
                 size_t j = pi[i - 1];
 
-                // Пока не совпадает и не дошли до начала
+                // РџРѕРєР° РЅРµ СЃРѕРІРїР°РґР°РµС‚ Рё РЅРµ РґРѕС€Р»Рё РґРѕ РЅР°С‡Р°Р»Р°
                 while (j > 0 && pattern[i] != pattern[j]) {
                     j = pi[j - 1];
                 }
 
-                // Если совпало, увеличиваем длину префикса
+                // Р•СЃР»Рё СЃРѕРІРїР°Р»Рѕ, СѓРІРµР»РёС‡РёРІР°РµРј РґР»РёРЅСѓ РїСЂРµС„РёРєСЃР°
                 if (pattern[i] == pattern[j]) {
                     ++j;
                 }
@@ -33,9 +33,9 @@ namespace textScan {
 
     } //anonymos namespace
     
-    // Полный перебор
+    // РџРѕР»РЅС‹Р№ РїРµСЂРµР±РѕСЂ
     std::optional<size_t> naiveSearch(std::string_view text, std::string_view pattern) {
-        if (pattern.empty()) return 0;  // Пустой паттерн всегда найден в позиции 0
+        if (pattern.empty()) return 0;  // РџСѓСЃС‚РѕР№ РїР°С‚С‚РµСЂРЅ РІСЃРµРіРґР° РЅР°Р№РґРµРЅ РІ РїРѕР·РёС†РёРё 0
 
         const size_t textLen = text.length();
         const size_t patternLen = pattern.length();
@@ -57,9 +57,9 @@ namespace textScan {
         return std::nullopt;
     }
 
-    // Поиск подстроки по префиксу шаблона (Кнут-Моррис-Пратт) 
+    // РџРѕРёСЃРє РїРѕРґСЃС‚СЂРѕРєРё РїРѕ РїСЂРµС„РёРєСЃСѓ С€Р°Р±Р»РѕРЅР° (РљРЅСѓС‚-РњРѕСЂСЂРёСЃ-РџСЂР°С‚С‚) 
     std::optional<size_t> KMPSearch(std::string_view text, std::string_view pattern) {
-        // Проверка граничных случаев
+        // РџСЂРѕРІРµСЂРєР° РіСЂР°РЅРёС‡РЅС‹С… СЃР»СѓС‡Р°РµРІ
         if (pattern.empty()) return 0;
 
         const size_t textLen = text.length();
@@ -67,24 +67,24 @@ namespace textScan {
 
         if (patternLen > textLen) return std::nullopt;
 
-        //строим префикс-функцию для шаблона
+        //СЃС‚СЂРѕРёРј РїСЂРµС„РёРєСЃ-С„СѓРЅРєС†РёСЋ РґР»СЏ С€Р°Р±Р»РѕРЅР°
         std::vector<size_t> pi = buildPrefixFunction(pattern);
 
-        //поиск
-        size_t j = 0;  // текущая длина совпавшего префикса
+        //РїРѕРёСЃРє
+        size_t j = 0;  // С‚РµРєСѓС‰Р°СЏ РґР»РёРЅР° СЃРѕРІРїР°РІС€РµРіРѕ РїСЂРµС„РёРєСЃР°
 
         for (size_t i = 0; i != textLen; ++i) {
-            // Пока не совпадает и не в начале
+            // РџРѕРєР° РЅРµ СЃРѕРІРїР°РґР°РµС‚ Рё РЅРµ РІ РЅР°С‡Р°Р»Рµ
             while (j > 0 && text[i] != pattern[j]) {
-                j = pi[j - 1];  // Сдвиг по префиксу
+                j = pi[j - 1];  // РЎРґРІРёРі РїРѕ РїСЂРµС„РёРєСЃСѓ
             }
 
-            // Если символы совпали
+            // Р•СЃР»Рё СЃРёРјРІРѕР»С‹ СЃРѕРІРїР°Р»Рё
             if (text[i] == pattern[j]) {
                 ++j;
             }
 
-            // Если нашли полное совпадение
+            // Р•СЃР»Рё РЅР°С€Р»Рё РїРѕР»РЅРѕРµ СЃРѕРІРїР°РґРµРЅРёРµ
             if (j == patternLen) {
                 return i - patternLen + 1;
             }
@@ -93,7 +93,7 @@ namespace textScan {
         return std::nullopt;
     }
 
-    // Поиск подстроки по суффиксу шаблона (Бойер-Мур-Хорспул) 
+    // РџРѕРёСЃРє РїРѕРґСЃС‚СЂРѕРєРё РїРѕ СЃСѓС„С„РёРєСЃСѓ С€Р°Р±Р»РѕРЅР° (Р‘РѕР№РµСЂ-РњСѓСЂ-РҐРѕСЂСЃРїСѓР») 
     std::optional<size_t> BMHSearch(std::string_view text, std::string_view pattern) {
         if (pattern.empty()) return 0;                       
         
@@ -102,7 +102,7 @@ namespace textScan {
         
         if (patternLen > textLen) return std::nullopt;
 
-        // Таблица сдвигов
+        // РўР°Р±Р»РёС†Р° СЃРґРІРёРіРѕРІ
         std::array<size_t, 256> shift;
         for (size_t i = 0; i < 256; ++i) 
             shift[i] = patternLen;
@@ -110,21 +110,21 @@ namespace textScan {
             shift[static_cast<unsigned char>(pattern[i])] = patternLen - 1 - i;
         }
 
-        // Поиск
-        size_t i = patternLen - 1;  // позиция в тексте, на которую смотрим
+        // РџРѕРёСЃРє
+        size_t i = patternLen - 1;  // РїРѕР·РёС†РёСЏ РІ С‚РµРєСЃС‚Рµ, РЅР° РєРѕС‚РѕСЂСѓСЋ СЃРјРѕС‚СЂРёРј
 
         while (i < textLen) {
             size_t j = 0;
-            // Сравниваем справа налево
+            // РЎСЂР°РІРЅРёРІР°РµРј СЃРїСЂР°РІР° РЅР°Р»РµРІРѕ
             while (j < patternLen && text[i - j] == pattern[patternLen - 1 - j]) {
                 ++j;
             }
 
             if (j == patternLen) {
-                return i - patternLen + 1;  // нашли
+                return i - patternLen + 1;  // РЅР°С€Р»Рё
             }
 
-            // Сдвигаемся по таблице
+            // РЎРґРІРёРіР°РµРјСЃСЏ РїРѕ С‚Р°Р±Р»РёС†Рµ
             unsigned char c = static_cast<unsigned char>(text[i]);
             i += shift[c];
         }
@@ -132,7 +132,7 @@ namespace textScan {
         return std::nullopt;
     }
 
-    // Поиск подстроки по Бойер-Муру
+    // РџРѕРёСЃРє РїРѕРґСЃС‚СЂРѕРєРё РїРѕ Р‘РѕР№РµСЂ-РњСѓСЂСѓ
     std::optional<size_t> BMSearch(std::string_view text, std::string_view pattern) {
         
         if (pattern.empty()) return 0;
@@ -142,7 +142,7 @@ namespace textScan {
         
         if (patternLen > textLen) return std::nullopt;
         
-        // ===== 1. ТАБЛИЦА ПЛОХИХ СИМВОЛОВ =====
+        // ===== 1. РўРђР‘Р›РР¦Рђ РџР›РћРҐРРҐ РЎРРњР’РћР›РћР’ =====
         std::array<size_t, 256> badCharShift;
         for (size_t i = 0; i < 256; ++i) {
             badCharShift[i] = patternLen;
@@ -151,11 +151,11 @@ namespace textScan {
             badCharShift[static_cast<unsigned char>(pattern[i])] = patternLen - 1 - i;
         }
 
-        // ===== 2. ТАБЛИЦА ХОРОШИХ СУФФИКСОВ =====
+        // ===== 2. РўРђР‘Р›РР¦Рђ РҐРћР РћРЁРРҐ РЎРЈР¤Р¤РРљРЎРћР’ =====
         std::vector<size_t> goodSuffixShift(patternLen + 1, 0);
         std::vector<size_t> border(patternLen + 1, 0);
 
-        // Построение границ (borders) для суффиксов
+        // РџРѕСЃС‚СЂРѕРµРЅРёРµ РіСЂР°РЅРёС† (borders) РґР»СЏ СЃСѓС„С„РёРєСЃРѕРІ
         size_t i = patternLen;
         size_t j = patternLen + 1;
         border[i] = j;
@@ -172,7 +172,7 @@ namespace textScan {
             border[i] = j;
         }
 
-        // Заполнение оставшихся сдвигов
+        // Р—Р°РїРѕР»РЅРµРЅРёРµ РѕСЃС‚Р°РІС€РёС…СЃСЏ СЃРґРІРёРіРѕРІ
         j = border[0];
         for (i = 0; i <= patternLen; ++i) {
             if (goodSuffixShift[i] == 0) {
@@ -183,11 +183,11 @@ namespace textScan {
             }
         }
 
-        // ===== 3. ПОИСК =====
-        size_t pos = 0;  // позиция в тексте
+        // ===== 3. РџРћРРЎРљ =====
+        size_t pos = 0;  // РїРѕР·РёС†РёСЏ РІ С‚РµРєСЃС‚Рµ
 
         while (pos <= textLen - patternLen) {
-            // Сравниваем справа налево, j = количество оставшихся символов
+            // РЎСЂР°РІРЅРёРІР°РµРј СЃРїСЂР°РІР° РЅР°Р»РµРІРѕ, j = РєРѕР»РёС‡РµСЃС‚РІРѕ РѕСЃС‚Р°РІС€РёС…СЃСЏ СЃРёРјРІРѕР»РѕРІ
             size_t j = patternLen;
 
             while (j != 0 && text[pos + j - 1] == pattern[j - 1]) {
@@ -195,13 +195,13 @@ namespace textScan {
             }
 
             if (j == 0) {
-                return pos;  // все символы совпали
+                return pos;  // РІСЃРµ СЃРёРјРІРѕР»С‹ СЃРѕРІРїР°Р»Рё
             }
 
-            // j > 0, несовпадение на позиции j-1
+            // j > 0, РЅРµСЃРѕРІРїР°РґРµРЅРёРµ РЅР° РїРѕР·РёС†РёРё j-1
             unsigned char badChar = static_cast<unsigned char>(text[pos + j - 1]);
             size_t badShift = badCharShift[badChar];
-            size_t goodShift = goodSuffixShift[j];  // таблица для позиции j
+            size_t goodShift = goodSuffixShift[j];  // С‚Р°Р±Р»РёС†Р° РґР»СЏ РїРѕР·РёС†РёРё j
 
             pos += std::max(badShift, goodShift);
         }
