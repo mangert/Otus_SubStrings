@@ -6,8 +6,8 @@
 #include <functional>
 #include <iomanip>
 #include <random>
-#include <string_view>
 #include "textScan.h"
+#include "KMPAutomaton.h"
 
 /**
  * @brief Красиво выводит строку, сокращая если она слишком длинная
@@ -128,7 +128,9 @@ void testAllAlgorithms(std::string_view text, std::string_view pattern, size_t T
     bool testNaive = true,
     bool testKMP = true,
     bool testBMH = true,
-    bool testBM = true) {
+    bool testBM = true,
+    bool testSlowAutomaton = true,
+    bool testFastAutomaton = true) {
 
     // Выводим информацию о тесте (сокращённо)
     std::cout << "\n" << std::string(60, '=') << "\n";
@@ -157,6 +159,24 @@ void testAllAlgorithms(std::string_view text, std::string_view pattern, size_t T
     }
     if (testBM) {
         searchTest(text, pattern, textScan::BMSearch, "Бойер-Мур (полный)", T);
+    }
+
+    if(testSlowAutomaton) {        
+        auto lambda = [pattern](std::string_view t, std::string_view /* p */) {
+            auto automaton = textScan::KMPAutomaton<textScan::PrefixMode::SLOW>(pattern);
+            return automaton.search(t);
+            };
+
+        searchTest(text, pattern, lambda, "Поиск по конечному автомату (SLOW)", T);            
+    }
+
+    if (testFastAutomaton) {
+        auto lambda = [pattern](std::string_view t, std::string_view /* p */) {
+            auto automaton = textScan::KMPAutomaton<textScan::PrefixMode::FAST>(pattern);
+            return automaton.search(t);
+            };
+
+        searchTest(text, pattern, lambda, "Поиск по конечному автомату (FAST)", T);
     }
 }
 
